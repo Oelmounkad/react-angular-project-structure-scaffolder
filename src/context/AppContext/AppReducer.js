@@ -1,11 +1,15 @@
 import { UPDATE_SCAFFOLDER } from "../types";
 
-export default (state, action) => {
+const AppReducer = (state, action) => {
   switch(action.type){
     case UPDATE_SCAFFOLDER:
       return{
         ...state,
         chosenScaffolder: action.payload
       }
+      default:
+        return state;
   }
 }
+
+export default AppReducer;

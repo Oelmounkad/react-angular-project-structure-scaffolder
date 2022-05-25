@@ -1,4 +1,4 @@
-import { UPDATE_SCAFFOLDER } from "../types";
+import { ADD_MODULE, UPDATE_SCAFFOLDER } from "../types";
 
 const AppReducer = (state, action) => {
   switch(action.type){
@@ -6,6 +6,11 @@ const AppReducer = (state, action) => {
       return{
         ...state,
         chosenScaffolder: action.payload
+      }
+    case ADD_MODULE:
+      return{
+        ...state,
+        moduleList: [...state.moduleList, action.payload]
       }
       default:
         return state;

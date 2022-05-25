@@ -13,7 +13,7 @@ const ScaffolderButtonsComponent = () => {
       <Stack direction="row" spacing={4}>
         <Button
           leftIcon={<DiAngularSimple />}
-          colorScheme="pink"
+          colorScheme="red"
           variant="solid"
           onClick={() => updateScaffolder('angular')}
         >

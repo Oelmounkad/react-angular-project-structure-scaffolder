@@ -1,5 +1,5 @@
 import { useReducer } from "react"
-import { UPDATE_SCAFFOLDER } from "../types"
+import { ADD_MODULE, UPDATE_SCAFFOLDER } from "../types"
 import AppContext from "./AppContext"
 import AppReducer from "./AppReducer"
 
@@ -8,6 +8,7 @@ const AppState = props => {
 
     const initialState = {
         chosenScaffolder: 'react',
+        moduleList: []
     }
 
    const [state, dispatch] = useReducer(AppReducer, initialState);
@@ -19,11 +20,17 @@ const AppState = props => {
     dispatch({type: UPDATE_SCAFFOLDER , payload: scaffolder})
 }
 
+    const addModule = (module) => {
+        dispatch({type: ADD_MODULE , payload: module})
+    }
+
 
    return (
     <AppContext.Provider 
     value={{
         chosenScaffolder: state.chosenScaffolder,
+        moduleList: state.moduleList,
+        addModule,
         updateScaffolder
     }}>
         {props.children}

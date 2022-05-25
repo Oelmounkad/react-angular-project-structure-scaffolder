@@ -2,7 +2,7 @@ import './ReactScaffolderComponent.css';
 
 const ReactScaffolderComponent = () => {
   return (
-    <div>ReactScaffolderComponent</div>
+    <div>Still working on it.... :D</div>
   )
 }
 

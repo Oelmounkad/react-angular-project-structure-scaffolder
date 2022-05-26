@@ -1,0 +1,16 @@
+.angular-module-wrapper{
+    background-color: #EF5350;
+    margin-top: 10px;
+    width: 30%;
+    height: 200px;
+    border-radius: 7px;
+}
+
+.angular-module-wrapper > p {
+    padding: 10px;
+    font-size: 20px;
+}
+
+.angular-module-wrapper > Button {
+    margin-left: 20px;
+}

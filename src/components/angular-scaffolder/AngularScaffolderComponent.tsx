@@ -19,6 +19,7 @@ import {
 } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import AppContext from "../../context/AppContext/AppContext";
+import AngularModuleComponent from "../angular module/AngularModuleComponent";
 import "./AngularScaffolderComponent.css";
 
 const AngularScaffolderComponent = () => {
@@ -30,7 +31,7 @@ const AngularScaffolderComponent = () => {
 
   const saveAddModuleModal = () => {
     addModule({
-      name: moduleName
+      name: `${moduleName.charAt(0).toUpperCase()}${moduleName.slice(1)}Module`
     });
     setModuleName('');
     onClose();
@@ -60,7 +61,7 @@ const AngularScaffolderComponent = () => {
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl>
-              <FormLabel>Module name</FormLabel>
+              <FormLabel>Module name (without module keyword)</FormLabel>
               <Input
                 value={moduleName}
                 onChange={(e) => setModuleName(e.target.value)}
@@ -85,7 +86,7 @@ const AngularScaffolderComponent = () => {
     {/* List Angular Modules */}
       <>
         {moduleList.map((m: any) => (
-          <p>{m.name}</p>
+          <AngularModuleComponent module={m} />
         ))}
       </>
     </div>

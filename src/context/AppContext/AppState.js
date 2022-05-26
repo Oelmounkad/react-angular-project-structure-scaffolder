@@ -1,5 +1,5 @@
 import { useReducer } from "react"
-import { ADD_MODULE, UPDATE_SCAFFOLDER } from "../types"
+import { ADD_COMPONENT_TO_MODULE, ADD_MODULE, UPDATE_SCAFFOLDER } from "../types"
 import AppContext from "./AppContext"
 import AppReducer from "./AppReducer"
 
@@ -24,6 +24,10 @@ const AppState = props => {
         dispatch({type: ADD_MODULE , payload: module})
     }
 
+    const addComponentToModule = (component, moduleName) => {
+        dispatch({type: ADD_COMPONENT_TO_MODULE , payload: {component, moduleName}})
+    }
+
 
    return (
     <AppContext.Provider 
@@ -31,7 +35,8 @@ const AppState = props => {
         chosenScaffolder: state.chosenScaffolder,
         moduleList: state.moduleList,
         addModule,
-        updateScaffolder
+        updateScaffolder,
+        addComponentToModule
     }}>
         {props.children}
     </AppContext.Provider>

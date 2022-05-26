@@ -14,6 +14,8 @@ import {
     useDisclosure,
   } from "@chakra-ui/react";
 import { useState } from 'react';
+import { useStore } from '../../stores/appStore';
+import { v4 as uuidv4 } from "uuid";
 import './AngularModuleComponent.css';
 
 const AngularModuleComponent = (props : any) => {
@@ -22,10 +24,15 @@ const AngularModuleComponent = (props : any) => {
 
     const [componentName, setComponentName] = useState("");
 
+    const { addComponentToModule } = useStore();
+
     const saveAddComponentModal = () => {
-       /*  addComponentToModule({
-          name: `${componentName.charAt(0).toUpperCase()}${componentName.slice(1)}Module`
-        }); */
+        addComponentToModule(
+          props.module.id,
+        {
+          id: uuidv4(),
+          name: `${componentName.charAt(0).toUpperCase()}${componentName.slice(1)}Component`
+        });
         setComponentName('');
         onClose();
       };
@@ -35,10 +42,12 @@ const AngularModuleComponent = (props : any) => {
       <div className='angular-module-wrapper'>
        <p>{props.module.name}</p>
        <Button
+          size='sm'
           leftIcon={<AddIcon />}
           colorScheme="white"
           bgColor='black'
           variant="solid"
+          onClick={onOpen}
         >
           Create Component
         </Button>

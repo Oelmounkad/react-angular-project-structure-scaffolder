@@ -31,11 +31,22 @@ export const useStore = create<AppState | any>(
         ...state.modules,
         {
           id,
-          name
+          name,
+          components: []
         } as IModule,
       ],
     }));
   },
+
+  addComponentToModule: (moduleId: string, component: IComponent) => {
+    set((state: AppState) => {
+      state.modules.find(module => module.id === moduleId)?.components?.push(component);
+      return {
+      ...state
+    }
+
+  });
+  }
 })
 
 )

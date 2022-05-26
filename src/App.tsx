@@ -7,6 +7,7 @@ function App() {
 
   return (
       <ChakraProvider>
+        <div className='flex-inprogress'>Project In progress...</div>
         <ScaffolderButtonsComponent />
         <ScaffolderComponent />
              

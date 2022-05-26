@@ -36,7 +36,8 @@ const AngularModuleComponent = (props : any) => {
        <p>{props.module.name}</p>
        <Button
           leftIcon={<AddIcon />}
-          colorScheme="blue"
+          colorScheme="white"
+          bgColor='black'
           variant="solid"
         >
           Create Component

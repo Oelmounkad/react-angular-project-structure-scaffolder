@@ -1,13 +1,11 @@
-import { useContext } from 'react';
-import AppContext from '../../context/AppContext/AppContext';
+import { useStore } from '../../stores/appStore';
 import AngularScaffolderComponent from '../angular-scaffolder/AngularScaffolderComponent';
 import ReactScaffolderComponent from '../react-scaffolder/ReactScaffolderComponent';
 import './ScaffolderComponent.css';
 
 const ScaffolderComponent = () => {
 
-  const appContext = useContext(AppContext);
-  const { chosenScaffolder } = appContext;
+  const { chosenScaffolder } = useStore();
 
   return (
     <>

@@ -1,17 +1,32 @@
 import create from "zustand";
-
+import { devtools } from 'zustand/middleware'
 interface AppState {
+  chosenScaffolder: string,
   modules: IModule[];
   addModule: (module: IModule) => void;
 }
 
-export const useStore = create<AppState>((set) => ({
+export const useStore = create<AppState | any>(
+  devtools(
+
+    (set) => ({
   // initial state
   modules: [],
+  chosenScaffolder: 'angular',
+
+
   // Reducers
+
+  updateScaffolder: (scaffolder: string) => {
+    set((state: AppState) => ({
+      ...state,
+      chosenScaffolder: scaffolder
+    }));
+  },
+
   addModule: (module: IModule) => {
     const { id , name } = module;
-    set((state) => ({
+    set((state: AppState) => ({
       modules: [
         ...state.modules,
         {
@@ -21,4 +36,9 @@ export const useStore = create<AppState>((set) => ({
       ],
     }));
   },
-}));
+})
+
+)
+);
+
+

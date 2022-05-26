@@ -1,11 +1,9 @@
 import { Button, Stack } from "@chakra-ui/react";
-import { useContext } from "react";
 import { DiAngularSimple, DiReact } from "react-icons/di";
-import AppContext from "../../context/AppContext/AppContext";
+import { useStore } from "../../stores/appStore";
 import "./ScaffolderButtonsComponent.css";
 const ScaffolderButtonsComponent = () => {
-  const appContext = useContext(AppContext);
-  const { updateScaffolder } = appContext;
+  const { updateScaffolder } = useStore();
 
   return (
       <>

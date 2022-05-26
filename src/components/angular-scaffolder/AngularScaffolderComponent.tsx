@@ -17,8 +17,7 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useContext, useState } from "react";
-import AppContext from "../../context/AppContext/AppContext";
+import { useState } from "react";
 import { useStore } from "../../stores/appStore";
 import AngularModuleComponent from "../angular module/AngularModuleComponent";
 import { v4 as uuidv4 } from "uuid";

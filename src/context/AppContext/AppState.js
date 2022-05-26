@@ -7,7 +7,7 @@ const AppState = props => {
 
 
     const initialState = {
-        chosenScaffolder: 'react',
+        chosenScaffolder: 'angular',
         moduleList: []
     }
 

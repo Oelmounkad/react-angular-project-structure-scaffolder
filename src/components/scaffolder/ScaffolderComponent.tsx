@@ -11,8 +11,8 @@ const ScaffolderComponent = () => {
 
   return (
     <>
-    { chosenScaffolder === 'angular' ? <AngularScaffolderComponent /> :
-    <ReactScaffolderComponent />
+    { chosenScaffolder === 'react' ? <ReactScaffolderComponent /> :
+    <AngularScaffolderComponent />
     } 
     </>
   )

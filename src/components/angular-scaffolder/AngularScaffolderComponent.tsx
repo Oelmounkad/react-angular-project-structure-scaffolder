@@ -19,7 +19,9 @@ import {
 } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import AppContext from "../../context/AppContext/AppContext";
+import { useStore } from "../../stores/appStore";
 import AngularModuleComponent from "../angular module/AngularModuleComponent";
+import { v4 as uuidv4 } from "uuid";
 import "./AngularScaffolderComponent.css";
 
 const AngularScaffolderComponent = () => {
@@ -27,12 +29,14 @@ const AngularScaffolderComponent = () => {
 
   const [moduleName, setModuleName] = useState("");
 
-  const { addModule, moduleList } = useContext(AppContext);
+  const { addModule, modules } = useStore();
 
   const saveAddModuleModal = () => {
-    addModule({
+    const newModule : IModule = {
+      id: uuidv4(),
       name: `${moduleName.charAt(0).toUpperCase()}${moduleName.slice(1)}Module`
-    });
+    }
+    addModule(newModule);
     setModuleName('');
     onClose();
   };
@@ -85,7 +89,7 @@ const AngularScaffolderComponent = () => {
 
     {/* List Angular Modules */}
       <>
-        {moduleList.map((m: any) => (
+        {modules.map((m: any) => (
           <AngularModuleComponent module={m} />
         ))}
       </>

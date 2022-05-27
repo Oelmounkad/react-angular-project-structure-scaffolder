@@ -2,19 +2,32 @@
     background-color: #EF5350;
     margin-top: 10px;
     width: 30%;
-    height: 200px;
     border-radius: 7px;
 }
 
-.angular-module-wrapper > p {
+.module-name {
     padding: 10px;
     font-size: 20px;
 }
 
+.component-title {
+    padding: 10px;
+}
+
 .angular-module-wrapper > Button {
     margin-left: 20px;
+    margin-bottom: 10px;
 }
 
 .angular-module-wrapper > UnorderedList {
     margin-left: 20px;
+}
+
+.angular-module-header{
+    display: flex;
+    justify-content: space-between;
+}
+.component-item-flex{
+   display: flex;
+    align-items: baseline;
 }

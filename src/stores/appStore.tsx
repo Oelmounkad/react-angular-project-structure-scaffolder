@@ -46,7 +46,25 @@ export const useStore = create<AppState | any>(
     }
 
   });
-  }
+  },
+  removeComponentFromModule: (moduleId: string, componentId: string) => {
+    set((state: AppState) => {
+      const index = state.modules.find(module => module.id === moduleId)?.components?.findIndex(component => component.id === componentId) as number;
+      state.modules.find(module => module.id === moduleId)?.components?.splice(index,1);
+      return {
+      ...state
+    }
+
+  });
+  },
+  removeModule: (moduleId: string) => {
+    set((state: AppState) => {
+      return {
+      modules: state.modules.filter(module => module.id !== moduleId)
+    }
+
+  });
+  },
 })
 
 )

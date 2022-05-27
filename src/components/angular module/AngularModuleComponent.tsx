@@ -1,8 +1,10 @@
 import { AddIcon } from '@chakra-ui/icons';
 import {
     Button,
+    CloseButton,
     FormControl,
     FormLabel,
+    IconButton,
     Input,
     ListItem,
     Modal,
@@ -26,7 +28,7 @@ const AngularModuleComponent = (props : any) => {
 
     const [componentName, setComponentName] = useState("");
 
-    const { addComponentToModule } = useStore();
+    const { addComponentToModule, removeModule, removeComponentFromModule } = useStore();
 
     const saveAddComponentModal = () => {
         addComponentToModule(
@@ -42,7 +44,11 @@ const AngularModuleComponent = (props : any) => {
   return (
       <>
       <div className='angular-module-wrapper'>
-       <p>{props.module.name}</p>
+        <div className='angular-module-header'>
+                 <p className='module-name'>{props.module.name}</p>
+                 <CloseButton size='md' onClick={() => removeModule(props.module.id)} />
+
+        </div>
        
        <Button
           size='sm'
@@ -53,11 +59,17 @@ const AngularModuleComponent = (props : any) => {
           onClick={onOpen}
         >
           Create Component
-        </Button>
-        <UnorderedList style={{marginLeft: '30px'}}>
-          {props.module.components}
-          <ListItem>Lorem ipsum dolor sit amet</ListItem>
-       </UnorderedList>
+        </Button><br />
+        { props.module.components.length > 0 && <i className='component-title'>Components :</i>  }
+        <ul style={{marginLeft: '30px'}}>
+          {props.module.components.map((component : IComponent) => (
+            <div className='component-item-flex'>
+            <li style={{paddingBottom: '10px'}}>{ component.name }</li>
+            <CloseButton size='md' onClick={() => removeComponentFromModule(props.module.id,component.id)} />
+            </div>
+            
+          ))}
+       </ul>
     </div>
     {/* Modal to add an angular Component */}
     <Modal isOpen={isOpen} onClose={onClose}>

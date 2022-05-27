@@ -1,4 +1,5 @@
 import { AddIcon } from '@chakra-ui/icons';
+import { FaAngular } from "react-icons/fa";
 import {
     Button,
     CloseButton,
@@ -6,7 +7,6 @@ import {
     FormLabel,
     IconButton,
     Input,
-    ListItem,
     Modal,
     ModalBody,
     ModalCloseButton,
@@ -14,8 +14,8 @@ import {
     ModalFooter,
     ModalHeader,
     ModalOverlay,
-    UnorderedList,
     useDisclosure,
+    useToast,
   } from "@chakra-ui/react";
 import { useState } from 'react';
 import { useStore } from '../../stores/appStore';
@@ -25,6 +25,8 @@ import './AngularModuleComponent.css';
 const AngularModuleComponent = (props : any) => {
 
     const { isOpen, onOpen, onClose } = useDisclosure();
+
+    const toast = useToast();
 
     const [componentName, setComponentName] = useState("");
 
@@ -39,13 +41,22 @@ const AngularModuleComponent = (props : any) => {
         });
         setComponentName('');
         onClose();
+
+        toast({
+          title: 'Component Added.',
+          description: "Component Added to your module.",
+          status: 'success',
+          duration: 1000,
+          position: 'top',
+          isClosable: true,
+        })
       };
 
   return (
       <>
       <div className='angular-module-wrapper'>
         <div className='angular-module-header'>
-                 <p className='module-name'>{props.module.name}</p>
+                 <p className='module-name'><FaAngular />{props.module.name}</p>
                  <CloseButton size='md' onClick={() => removeModule(props.module.id)} />
 
         </div>

@@ -4,6 +4,7 @@ import {
     FormControl,
     FormLabel,
     Input,
+    ListItem,
     Modal,
     ModalBody,
     ModalCloseButton,
@@ -11,6 +12,7 @@ import {
     ModalFooter,
     ModalHeader,
     ModalOverlay,
+    UnorderedList,
     useDisclosure,
   } from "@chakra-ui/react";
 import { useState } from 'react';
@@ -41,6 +43,7 @@ const AngularModuleComponent = (props : any) => {
       <>
       <div className='angular-module-wrapper'>
        <p>{props.module.name}</p>
+       
        <Button
           size='sm'
           leftIcon={<AddIcon />}
@@ -51,6 +54,10 @@ const AngularModuleComponent = (props : any) => {
         >
           Create Component
         </Button>
+        <UnorderedList style={{marginLeft: '30px'}}>
+          {props.module.components}
+          <ListItem>Lorem ipsum dolor sit amet</ListItem>
+       </UnorderedList>
     </div>
     {/* Modal to add an angular Component */}
     <Modal isOpen={isOpen} onClose={onClose}>

@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+# React / Angular project structure scaffolder
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Live app : https://oelmounkad-angular-react-scaffolder.netlify.app/
 
 ## Available Scripts
 

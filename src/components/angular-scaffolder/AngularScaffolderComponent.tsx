@@ -88,8 +88,8 @@ const AngularScaffolderComponent = () => {
 
     {/* List Angular Modules */}
       <>
-        {modules.map((m: any) => (
-          <AngularModuleComponent module={m} />
+        {modules.map((m: IModule) => (
+          <AngularModuleComponent key={m.id} module={m} />
         ))}
       </>
     </div>

@@ -14,3 +14,7 @@
 .angular-module-wrapper > Button {
     margin-left: 20px;
 }
+
+.angular-module-wrapper > UnorderedList {
+    margin-left: 20px;
+}

@@ -2,7 +2,7 @@ interface IModule {
     id: string;
     name: string;
     components?: IComponent[];
-    importedModuleNames?: string[];
+    importedModules?: IModule[];
     exportedModuleNames?: string[];
     providedServicesNames?: string[];
   }

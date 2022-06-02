@@ -52,7 +52,6 @@ const AngularScaffolderComponent = () => {
         </MenuButton>
         <MenuList>
           <MenuItem onClick={onOpen}>Add Module</MenuItem>
-          <MenuItem>Add Component</MenuItem>
         </MenuList>
       </Menu>
      

@@ -55,7 +55,7 @@ const AngularModuleComponent = (props : any) => {
       <>
       <div className='angular-module-wrapper'>
         <div className='angular-module-header'>
-                 <p className='module-name'><FaAngular />{props.module.name}</p>
+                 <p className='module-name'><FaAngular /> &nbsp;{props.module.name}</p>
                  <CloseButton size='md' onClick={() => removeModule(props.module.id)} />
 
         </div>
@@ -64,13 +64,35 @@ const AngularModuleComponent = (props : any) => {
           size='sm'
           leftIcon={<AddIcon />}
           colorScheme="white"
-          bgColor='black'
+          bgColor='#009688'
           variant="solid"
           onClick={onOpen}
         >
           Create Component
-        </Button><br />
-        { props.module.components.length > 0 && <i className='component-title'>Components :</i>  }
+        </Button>
+        <Button
+          size='sm'
+          leftIcon={<AddIcon />}
+          colorScheme="white"
+          bgColor='#536DFE'
+          variant="solid"
+          onClick={onOpen}
+        >
+          Import Modules
+        </Button>
+
+        <Button
+          size='sm'
+          leftIcon={<AddIcon />}
+          colorScheme="white"
+          bgColor='black'
+          variant="solid"
+          onClick={onOpen}
+        >
+          Export Modules
+        </Button>
+        <br />
+        { props.module.components.length > 0 && <u className='component-title'>Components :</u>  }
         <ul style={{marginLeft: '30px'}}>
           {props.module.components.map((component : IComponent) => (
             <div className='component-item-flex'>

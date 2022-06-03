@@ -30,7 +30,7 @@ export const useStore = create<AppState | any>(
             id,
             name,
             components: [],
-            exportedModuleNames: [],
+            exportedModules: [],
             importedModules: [],
             providedServicesNames: [],
           } as IModule,
@@ -81,6 +81,17 @@ export const useStore = create<AppState | any>(
         return state;
       });
     },
+    addExportedModuleToModule: (
+      moduleToExport: IModule,
+      hostingModule: IModule
+    ) => {
+      set((state: AppState) => {
+        state.modules
+          .find((module) => module.id === hostingModule.id)
+          ?.exportedModules?.push(moduleToExport);
+        return state;
+      });
+    },
     removeImportedModuleFromModule: (
       moduleToRemove: IModule,
       hostingModule: IModule
@@ -93,6 +104,24 @@ export const useStore = create<AppState | any>(
           ) as number;
           state.modules
           .find((module) => module.id === hostingModule.id)?.importedModules?.splice(index, 1);
+
+        return {
+          ...state
+        };
+      });
+    },
+    removeExportedModuleFromModule: (
+      moduleToRemove: IModule,
+      hostingModule: IModule
+    ) => {
+      set((state: AppState) => {
+          const index = state.modules
+          .find((module) => module.id === hostingModule.id)
+          ?.exportedModules?.findIndex(
+            (module) => module.name === moduleToRemove.name
+          ) as number;
+          state.modules
+          .find((module) => module.id === hostingModule.id)?.exportedModules?.splice(index, 1);
 
         return {
           ...state

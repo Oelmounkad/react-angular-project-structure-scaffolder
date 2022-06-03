@@ -35,6 +35,12 @@ const AngularModuleComponent = (props: any) => {
     onClose: onCloseImportModule,
   } = useDisclosure();
 
+  const {
+    isOpen: isOpenExportModule,
+    onOpen: onOpenExportModule,
+    onClose: onCloseExportModule,
+  } = useDisclosure();
+
   const toast = useToast();
 
   const [componentName, setComponentName] = useState("");
@@ -44,16 +50,26 @@ const AngularModuleComponent = (props: any) => {
     removeModule,
     removeComponentFromModule,
     addImportedModuleToModule,
+    addExportedModuleToModule,
     removeImportedModuleFromModule,
+    removeExportedModuleFromModule,
     modules,
   } = useStore();
 
   const [selectedImportedModule, setSelectedImportedModule] = useState("");
+  const [selectedExportedModule, setSelectedExportedModule] = useState("");
 
   const filteredImportedModulesToShow = (module: IModule): boolean => {
     return (
       module.name !== props.module.name &&
       !props.module.importedModules.map((module: IModule) => module.id).includes(module.id)
+    );
+  };
+
+  const filteredExportedModulesToShow = (module: IModule): boolean => {
+    return (
+      module.name !== props.module.name &&
+      !props.module.exportedModules.map((module: IModule) => module.id).includes(module.id)
     );
   };
 
@@ -84,6 +100,17 @@ const AngularModuleComponent = (props: any) => {
     const hostingModule: IModule = modules.find(
       (module: IModule) => module.name === props.module.name
     );
+
+    if (!moduleToImport) {
+      toast({
+        title: `you have to choose a module to import`,
+        status: 'error',
+        position: 'top',
+        isClosable: true,
+      })
+      return;
+    }
+
     addImportedModuleToModule(moduleToImport, hostingModule);
     setSelectedImportedModule("");
     onCloseImportModule();
@@ -91,6 +118,38 @@ const AngularModuleComponent = (props: any) => {
     toast({
       title: "Imported Module.",
       description: "Module imported to your module.",
+      status: "success",
+      duration: 1000,
+      position: "top",
+      isClosable: true,
+    });
+  };
+
+  const addSelectedExportedModule = (moduleName: string) => {
+    const moduleToExport: IModule = modules.find(
+      (module: IModule) => module.name === moduleName
+    );
+    const hostingModule: IModule = modules.find(
+      (module: IModule) => module.name === props.module.name
+    );
+
+    if (!moduleToExport) {
+      toast({
+        title: `you have to choose a module to export`,
+        status: 'error',
+        position: 'top',
+        isClosable: true,
+      })
+      return;
+    }
+
+    addExportedModuleToModule(moduleToExport, hostingModule);
+    setSelectedExportedModule("");
+    onCloseExportModule();
+
+    toast({
+      title: "Exported Module.",
+      description: "Module Exported to your module.",
       status: "success",
       duration: 1000,
       position: "top",
@@ -138,7 +197,7 @@ const AngularModuleComponent = (props: any) => {
           colorScheme="white"
           bgColor="black"
           variant="solid"
-          onClick={onOpenAddComponent}
+          onClick={onOpenExportModule}
         >
           Export Modules
         </Button>
@@ -179,6 +238,25 @@ const AngularModuleComponent = (props: any) => {
             </div>
           ))}
         </ul>
+
+        {props.module.exportedModules.length > 0 && (
+          <i>
+            <u className="component-title">Exported Modules :</u>
+          </i>
+        )}
+        <ul style={{ marginLeft: "30px" }}>
+          {props.module.exportedModules.map((module: IModule) => (
+            <div className="component-item-flex">
+              <li style={{ paddingBottom: "10px" }}>{module.name}</li>
+              <CloseButton
+                size="md"
+                onClick={() =>
+                  removeExportedModuleFromModule(module, props.module)
+                }
+              />
+            </div>
+          ))}
+        </ul>
       </div>
       {/* Modal to add an angular Component */}
       <Modal isOpen={isOpenAddComponent} onClose={onCloseAddComponent}>
@@ -203,7 +281,7 @@ const AngularModuleComponent = (props: any) => {
               mr={3}
               onClick={() => saveAddComponentModal()}
             >
-              Save
+              Add Component
             </Button>
             <Button onClick={onCloseAddComponent}>Cancel</Button>
           </ModalFooter>
@@ -247,6 +325,48 @@ const AngularModuleComponent = (props: any) => {
               Import Module
             </Button>
             <Button onClick={onCloseImportModule}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+
+      {/* Modal to add an exported Module */}
+      <Modal isOpen={isOpenExportModule} onClose={onCloseExportModule}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Select modules to Export</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>
+            <FormControl>
+              {/* <FormLabel>Component name</FormLabel> */}
+              <Select
+                value={selectedExportedModule}
+                onChange={(e) => {
+                  setSelectedExportedModule(e.target.value);
+                }}
+                variant="filled"
+                placeholder="Select a module"
+              >
+                {modules
+                  ?.filter((module: IModule) =>
+                  filteredExportedModulesToShow(module)
+                  )
+                  .map((module: IModule) => (
+                    <option value={module.name}>{module.name}</option>
+                  ))}
+              </Select>
+            </FormControl>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={() => addSelectedExportedModule(selectedExportedModule)}
+            >
+              Export Module
+            </Button>
+            <Button onClick={onCloseExportModule}>Cancel</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

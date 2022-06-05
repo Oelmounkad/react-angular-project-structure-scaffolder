@@ -1,6 +1,12 @@
 import { AddIcon } from "@chakra-ui/icons";
 import { FaAngular } from "react-icons/fa";
 import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   Button,
   CloseButton,
   FormControl,
@@ -17,7 +23,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useStore } from "../../stores/appStore";
 import { v4 as uuidv4 } from "uuid";
 import "./AngularModuleComponent.css";
@@ -41,9 +47,18 @@ const AngularModuleComponent = (props: any) => {
     onClose: onCloseExportModule,
   } = useDisclosure();
 
+  const {
+    isOpen: isOpenRemoveModulePrompt,
+    onOpen: onOpenRemoveModulePrompt,
+    onClose: onCloseRemoveModulePrompt,
+  } = useDisclosure();
+
   const toast = useToast();
 
-  const [componentName, setComponentName] = useState("");
+  const cancelRef = useRef() as unknown as React.MutableRefObject<HTMLInputElement>;
+
+  const [componentName, setComponentName] = useState('');
+  const [moduleToRemove, setModuleToRemove] = useState({} as IModule);
 
   const {
     addComponentToModule,
@@ -59,17 +74,31 @@ const AngularModuleComponent = (props: any) => {
   const [selectedImportedModule, setSelectedImportedModule] = useState("");
   const [selectedExportedModule, setSelectedExportedModule] = useState("");
 
+  const removeModulePrompt = (module: IModule): void => {
+    setModuleToRemove(module);
+    onOpenRemoveModulePrompt();
+  };
+  const localRemoveModule = (module: IModule) => {
+    removeModule(module.id);
+    setModuleToRemove({} as IModule);
+    onCloseRemoveModulePrompt();
+  }
+
   const filteredImportedModulesToShow = (module: IModule): boolean => {
     return (
       module.name !== props.module.name &&
-      !props.module.importedModules.map((module: IModule) => module.id).includes(module.id)
+      !props.module.importedModules
+        .map((module: IModule) => module.id)
+        .includes(module.id)
     );
   };
 
   const filteredExportedModulesToShow = (module: IModule): boolean => {
     return (
       module.name !== props.module.name &&
-      !props.module.exportedModules.map((module: IModule) => module.id).includes(module.id)
+      !props.module.exportedModules
+        .map((module: IModule) => module.id)
+        .includes(module.id)
     );
   };
 
@@ -104,10 +133,10 @@ const AngularModuleComponent = (props: any) => {
     if (!moduleToImport) {
       toast({
         title: `you have to choose a module to import`,
-        status: 'error',
-        position: 'top',
+        status: "error",
+        position: "top",
         isClosable: true,
-      })
+      });
       return;
     }
 
@@ -136,10 +165,10 @@ const AngularModuleComponent = (props: any) => {
     if (!moduleToExport) {
       toast({
         title: `you have to choose a module to export`,
-        status: 'error',
-        position: 'top',
+        status: "error",
+        position: "top",
         isClosable: true,
-      })
+      });
       return;
     }
 
@@ -166,7 +195,7 @@ const AngularModuleComponent = (props: any) => {
           </p>
           <CloseButton
             size="md"
-            onClick={() => removeModule(props.module.id)}
+            onClick={() => removeModulePrompt(props.module)}
           />
         </div>
 
@@ -329,7 +358,6 @@ const AngularModuleComponent = (props: any) => {
         </ModalContent>
       </Modal>
 
-
       {/* Modal to add an exported Module */}
       <Modal isOpen={isOpenExportModule} onClose={onCloseExportModule}>
         <ModalOverlay />
@@ -349,7 +377,7 @@ const AngularModuleComponent = (props: any) => {
               >
                 {modules
                   ?.filter((module: IModule) =>
-                  filteredExportedModulesToShow(module)
+                    filteredExportedModulesToShow(module)
                   )
                   .map((module: IModule) => (
                     <option value={module.name}>{module.name}</option>
@@ -370,6 +398,34 @@ const AngularModuleComponent = (props: any) => {
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+      {/** Alert dialog to delete module */}
+      <AlertDialog
+        isOpen={isOpenRemoveModulePrompt}
+        leastDestructiveRef={cancelRef}
+        onClose={onCloseRemoveModulePrompt}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+              Delete Module
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure you want to delete <strong>{moduleToRemove.name}</strong>?
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button onClick={onCloseRemoveModulePrompt}>
+                Cancel
+              </Button>
+              <Button colorScheme='red' onClick={() => localRemoveModule(moduleToRemove)} ml={3}>
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </>
   );
 };

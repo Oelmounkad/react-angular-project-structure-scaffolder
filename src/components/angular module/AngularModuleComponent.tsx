@@ -27,6 +27,7 @@ import React, { useRef, useState } from "react";
 import { useStore } from "../../stores/appStore";
 import { v4 as uuidv4 } from "uuid";
 import "./AngularModuleComponent.css";
+import { filteredExportedModulesToShow, filteredImportedModulesToShow } from "../../functions/angular-module-functions";
 
 const AngularModuleComponent = (props: any) => {
   const {
@@ -84,23 +85,7 @@ const AngularModuleComponent = (props: any) => {
     onCloseRemoveModulePrompt();
   }
 
-  const filteredImportedModulesToShow = (module: IModule): boolean => {
-    return (
-      module.name !== props.module.name &&
-      !props.module.importedModules
-        .map((module: IModule) => module.id)
-        .includes(module.id)
-    );
-  };
 
-  const filteredExportedModulesToShow = (module: IModule): boolean => {
-    return (
-      module.name !== props.module.name &&
-      !props.module.exportedModules
-        .map((module: IModule) => module.id)
-        .includes(module.id)
-    );
-  };
 
   const saveAddComponentModal = () => {
     addComponentToModule(props.module.id, {
@@ -336,7 +321,7 @@ const AngularModuleComponent = (props: any) => {
               >
                 {modules
                   ?.filter((module: IModule) =>
-                    filteredImportedModulesToShow(module)
+                    filteredImportedModulesToShow(module,props.module)
                   )
                   .map((module: IModule) => (
                     <option value={module.name}>{module.name}</option>
@@ -366,7 +351,6 @@ const AngularModuleComponent = (props: any) => {
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl>
-              {/* <FormLabel>Component name</FormLabel> */}
               <Select
                 value={selectedExportedModule}
                 onChange={(e) => {
@@ -377,7 +361,7 @@ const AngularModuleComponent = (props: any) => {
               >
                 {modules
                   ?.filter((module: IModule) =>
-                    filteredExportedModulesToShow(module)
+                    filteredExportedModulesToShow(module, props.module)
                   )
                   .map((module: IModule) => (
                     <option value={module.name}>{module.name}</option>

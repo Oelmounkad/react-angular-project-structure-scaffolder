@@ -65,6 +65,16 @@ export const useStore = create<AppState | any>(
     },
     removeModule: (moduleId: string) => {
       set((state: AppState) => {
+        /** removes the module from imports and exports in other modules */
+        state.modules.forEach((module) => {
+          module.importedModules = module.importedModules?.filter(
+            (module) => module.id !== moduleId
+          );
+          module.exportedModules = module.exportedModules?.filter(
+            (module) => module.id !== moduleId
+          );
+        });
+        // Removes the modules from the list
         return {
           modules: state.modules.filter((module) => module.id !== moduleId),
         };
@@ -97,16 +107,17 @@ export const useStore = create<AppState | any>(
       hostingModule: IModule
     ) => {
       set((state: AppState) => {
-          const index = state.modules
+        const index = state.modules
           .find((module) => module.id === hostingModule.id)
           ?.importedModules?.findIndex(
             (module) => module.name === moduleToRemove.name
           ) as number;
-          state.modules
-          .find((module) => module.id === hostingModule.id)?.importedModules?.splice(index, 1);
+        state.modules
+          .find((module) => module.id === hostingModule.id)
+          ?.importedModules?.splice(index, 1);
 
         return {
-          ...state
+          ...state,
         };
       });
     },
@@ -115,16 +126,17 @@ export const useStore = create<AppState | any>(
       hostingModule: IModule
     ) => {
       set((state: AppState) => {
-          const index = state.modules
+        const index = state.modules
           .find((module) => module.id === hostingModule.id)
           ?.exportedModules?.findIndex(
             (module) => module.name === moduleToRemove.name
           ) as number;
-          state.modules
-          .find((module) => module.id === hostingModule.id)?.exportedModules?.splice(index, 1);
+        state.modules
+          .find((module) => module.id === hostingModule.id)
+          ?.exportedModules?.splice(index, 1);
 
         return {
-          ...state
+          ...state,
         };
       });
     },

@@ -49,6 +49,12 @@ const AngularModuleComponent = (props: any) => {
   } = useDisclosure();
 
   const {
+    isOpen: isOpenProvideService,
+    onOpen: onOpenProvideService,
+    onClose: onCloseProvideService,
+  } = useDisclosure();
+
+  const {
     isOpen: isOpenRemoveModulePrompt,
     onOpen: onOpenRemoveModulePrompt,
     onClose: onCloseRemoveModulePrompt,
@@ -215,6 +221,17 @@ const AngularModuleComponent = (props: any) => {
         >
           Export Modules
         </Button>
+
+        <Button
+          size="sm"
+          leftIcon={<AddIcon />}
+          colorScheme="white"
+          bgColor="#FBC02D"
+          variant="solid"
+          onClick={onOpenProvideService}
+        >
+          Provide Services
+        </Button>
         <br />
         {props.module.components.length > 0 && (
           <i>
@@ -267,6 +284,25 @@ const AngularModuleComponent = (props: any) => {
                 onClick={() =>
                   removeExportedModuleFromModule(module, props.module)
                 }
+              />
+            </div>
+          ))}
+        </ul>
+
+        {props.module.providedServices.length > 0 && (
+          <i>
+            <u className="component-title">Exported Modules :</u>
+          </i>
+        )}
+        <ul style={{ marginLeft: "30px" }}>
+          {props.module.providedServices.map((service: IService) => (
+            <div className="component-item-flex">
+              <li style={{ paddingBottom: "10px" }}>{service.name}</li>
+              <CloseButton
+                size="md"
+                /* onClick={() =>
+                  removeProvidedServiceFromModule(module, props.module)
+                } */
               />
             </div>
           ))}

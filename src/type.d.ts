@@ -4,10 +4,15 @@ interface IModule {
     components?: IComponent[];
     importedModules?: IModule[];
     exportedModules?: IModule[];
-    providedServicesNames?: string[];
+    providedServices?: IService[];
   }
 
   interface IComponent {
+    id: string;
+    name: string;
+  }
+
+  interface IService {
     id: string;
     name: string;
   }

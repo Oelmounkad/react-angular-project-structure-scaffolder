@@ -32,7 +32,7 @@ export const useStore = create<AppState | any>(
             components: [],
             exportedModules: [],
             importedModules: [],
-            providedServicesNames: [],
+            providedServices: [],
           } as IModule,
         ],
       }));

@@ -62,6 +62,7 @@ const AngularScaffolderComponent = () => {
             Add Global Service
           </Button>
       </Stack>
+      <br />
 <div className="modules-services-header">
          {modules.length > 0 && <i>
             <u>Modules :</u>

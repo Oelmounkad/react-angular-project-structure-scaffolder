@@ -2,7 +2,7 @@ import './ReactScaffolderComponent.css';
 
 const ReactScaffolderComponent = () => {
   return (
-    <div>Still working on it.... :D</div>
+    <div>Starting it after i finish the angular scaffolder... :D</div>
   )
 }
 

@@ -1,4 +1,41 @@
+.modules-services-wrapper{
+    display: flex;
+    justify-content: flex-start;
+}
+
+.modules-services-wrapper-gapped{
+    display: flex;
+    justify-content: flex-start;
+    gap: 200px;
+}
+
+.modules-services-header{
+    display: flex;
+    justify-content: flex-start;
+    gap: 826px;
+}
+
 .angular-scaffolder-wrapper{
     margin-top: 20px;
     margin-left: 20px;
+}
+
+.angular-service-wrapper{
+    background-color: #FBC02D;
+    margin-top: 10px;
+    width: 138%;
+    border-radius: 7px;
+    height: 52px;
+}
+
+.angular-service-header{
+    display: flex;
+    justify-content: space-between;
+}
+
+.service-name {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    font-size: 20px;
 }

@@ -419,6 +419,46 @@ const AngularModuleComponent = (props: any) => {
         </ModalContent>
       </Modal>
 
+      {/* Modal to Provide a service */}
+      <Modal isOpen={isOpenExportModule} onClose={onCloseExportModule}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Select modules to Export</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>
+            <FormControl>
+              <Select
+                value={selectedExportedModule}
+                onChange={(e) => {
+                  setSelectedExportedModule(e.target.value);
+                }}
+                variant="filled"
+                placeholder="Select a module"
+              >
+                {modules
+                  ?.filter((module: IModule) =>
+                    filteredExportedModulesToShow(module, props.module)
+                  )
+                  .map((module: IModule) => (
+                    <option value={module.name}>{module.name}</option>
+                  ))}
+              </Select>
+            </FormControl>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={() => addSelectedExportedModule(selectedExportedModule)}
+            >
+              Export Module
+            </Button>
+            <Button onClick={onCloseExportModule}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
       {/** Alert dialog to delete module */}
       <AlertDialog
         isOpen={isOpenRemoveModulePrompt}

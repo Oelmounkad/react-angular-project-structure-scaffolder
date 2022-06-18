@@ -1,8 +1,13 @@
 .angular-module-wrapper{
     background-color: #EF5350;
     margin-top: 10px;
-    width: 30%;
+    width: 65%;
     border-radius: 7px;
+}
+
+.angular-module-header{
+    display: flex;
+    justify-content: space-between;
 }
 
 .module-name {
@@ -25,10 +30,6 @@
     margin-left: 20px;
 }
 
-.angular-module-header{
-    display: flex;
-    justify-content: space-between;
-}
 .component-item-flex{
    display: flex;
     align-items: baseline;

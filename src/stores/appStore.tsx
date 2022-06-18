@@ -3,13 +3,14 @@ import { devtools } from "zustand/middleware";
 interface AppState {
   chosenScaffolder: string;
   modules: IModule[];
-  addModule: (module: IModule) => void;
+  globalServices: IService[];
 }
 
 export const useStore = create<AppState | any>(
   devtools((set) => ({
     // initial state
     modules: [],
+    globalServices: [],
     chosenScaffolder: "angular",
 
     // Reducers
@@ -34,6 +35,19 @@ export const useStore = create<AppState | any>(
             importedModules: [],
             providedServices: [],
           } as IModule,
+        ],
+      }));
+    },
+
+    addGlobalService: (service: IService) => {
+      const { id, name } = service;
+      set((state: AppState) => ({
+        globalServices: [
+          ...state.globalServices,
+          {
+            id,
+            name
+          } as IService,
         ],
       }));
     },
@@ -77,6 +91,14 @@ export const useStore = create<AppState | any>(
         // Removes the modules from the list
         return {
           modules: state.modules.filter((module) => module.id !== moduleId),
+        };
+      });
+    },
+    removeGlobalService: (serviceId: string) => {
+      set((state: AppState) => {
+        // Removes the service from the list
+        return {
+          globalServices: state.globalServices.filter((service) => service.id !== serviceId),
         };
       });
     },

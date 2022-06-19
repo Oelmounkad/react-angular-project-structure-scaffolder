@@ -1,5 +1,8 @@
 
-import fs from 'fs'
+const fs = require('fs');
+
+
+const moduleFileTemplate = `import { NgModule } from '@angular/core';\nimport { BrowserModule } from '@angular/platform-browser';\n$componentImports\n@NgModule({\ndeclarations: [\n$declaredComponents\n],\n})\nexport class $moduleName { }`
 
 
 const projectStructure = {
@@ -48,9 +51,7 @@ fs.mkdir('src', (err) => {
             if (err) {
                 return console.error(err);
             }
-
-          createModule(module.name)
-
+          createModuleFile('src/' + directoryName, module)
 
         });
 
@@ -59,11 +60,18 @@ fs.mkdir('src', (err) => {
   });
 
 
-  const createModule = (str = '') => {
-    fs.writeFile("/tmp/test", "Hey there!", function(err) {
+  const createModuleFile = (directoryName = '', module = '') => {
+
+    const fileName = module.name.replace('Module','').toLowerCase()+'.module.ts';
+
+    fs.appendFile( directoryName+'/'+ fileName, getModuleFileContentFromTemplate(module), err => {
       if(err) {
           return console.log(err);
       }
-      console.log("The file was saved!");
   }); 
+  }
+
+  const getModuleFileContentFromTemplate = (module) => {
+    const declaredComponents = module.components.map((component) => component.name).join(',\n');
+    return moduleFileTemplate.replace('$moduleName',module.name).replace('$declaredComponents',declaredComponents)
   }

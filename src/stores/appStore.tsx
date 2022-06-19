@@ -62,6 +62,16 @@ export const useStore = create<AppState | any>(
         };
       });
     },
+    addProvidedServiceToModule: (moduleId: string, service: IService) => {
+      set((state: AppState) => {
+        state.modules
+          .find((module) => module.id === moduleId)
+          ?.providedServices?.push(service);
+        return {
+          ...state,
+        };
+      });
+    },
     removeComponentFromModule: (moduleId: string, componentId: string) => {
       set((state: AppState) => {
         const index = state.modules
@@ -156,6 +166,25 @@ export const useStore = create<AppState | any>(
         state.modules
           .find((module) => module.id === hostingModule.id)
           ?.exportedModules?.splice(index, 1);
+
+        return {
+          ...state,
+        };
+      });
+    },
+    removeProvidedServiceFromModule: (
+      serviceToRemove: IService,
+      hostingModule: IModule
+    ) => {
+      set((state: AppState) => {
+        const index = state.modules
+          .find((module) => module.id === hostingModule.id)
+          ?.providedServices?.findIndex(
+            (service) => service.name === serviceToRemove.name
+          ) as number;
+        state.modules
+          .find((module) => module.id === hostingModule.id)
+          ?.providedServices?.splice(index, 1);
 
         return {
           ...state,

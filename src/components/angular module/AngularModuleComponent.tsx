@@ -75,11 +75,16 @@ const AngularModuleComponent = (props: any) => {
     addExportedModuleToModule,
     removeImportedModuleFromModule,
     removeExportedModuleFromModule,
+    removeProvidedServiceFromModule,
     modules,
+    addProvidedServiceToModule,
   } = useStore();
 
   const [selectedImportedModule, setSelectedImportedModule] = useState("");
   const [selectedExportedModule, setSelectedExportedModule] = useState("");
+
+  const [providedServiceName, setProvidedServiceName] = useState("");
+
 
   const removeModulePrompt = (module: IModule): void => {
     setModuleToRemove(module);
@@ -176,6 +181,26 @@ const AngularModuleComponent = (props: any) => {
       isClosable: true,
     });
   };
+
+const saveAddProvidedServiceModal = () => {
+  addProvidedServiceToModule(props.module.id, {
+    id: uuidv4(),
+    name: `${providedServiceName.charAt(0).toUpperCase()}${providedServiceName.slice(
+      1
+    )}Service`,
+  });
+  setProvidedServiceName("");
+  onCloseProvideService();
+
+  toast({
+    title: "Service Provided.",
+    description: "Service provided to your module.",
+    status: "success",
+    duration: 1000,
+    position: "top",
+    isClosable: true,
+  });
+};
 
   return (
     <>
@@ -291,7 +316,7 @@ const AngularModuleComponent = (props: any) => {
 
         {props.module.providedServices.length > 0 && (
           <i>
-            <u className="component-title">Exported Modules :</u>
+            <u className="component-title">Provided Services :</u>
           </i>
         )}
         <ul style={{ marginLeft: "30px" }}>
@@ -300,9 +325,9 @@ const AngularModuleComponent = (props: any) => {
               <li style={{ paddingBottom: "10px" }}>{service.name}</li>
               <CloseButton
                 size="md"
-                /* onClick={() =>
-                  removeProvidedServiceFromModule(module, props.module)
-                } */
+                onClick={() =>
+                  removeProvidedServiceFromModule(service, props.module)
+                }
               />
             </div>
           ))}
@@ -420,29 +445,19 @@ const AngularModuleComponent = (props: any) => {
       </Modal>
 
       {/* Modal to Provide a service */}
-      <Modal isOpen={isOpenExportModule} onClose={onCloseExportModule}>
-        <ModalOverlay />
+      <Modal isOpen={isOpenProvideService} onClose={onCloseProvideService}>
+      <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Select modules to Export</ModalHeader>
+          <ModalHeader>Provide a Service</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl>
-              <Select
-                value={selectedExportedModule}
-                onChange={(e) => {
-                  setSelectedExportedModule(e.target.value);
-                }}
-                variant="filled"
-                placeholder="Select a module"
-              >
-                {modules
-                  ?.filter((module: IModule) =>
-                    filteredExportedModulesToShow(module, props.module)
-                  )
-                  .map((module: IModule) => (
-                    <option value={module.name}>{module.name}</option>
-                  ))}
-              </Select>
+              <FormLabel>Provided Service Name</FormLabel>
+              <Input
+                value={providedServiceName}
+                onChange={(e) => setProvidedServiceName(e.target.value)}
+                placeholder="Provided service name"
+              />
             </FormControl>
           </ModalBody>
 
@@ -450,11 +465,11 @@ const AngularModuleComponent = (props: any) => {
             <Button
               colorScheme="blue"
               mr={3}
-              onClick={() => addSelectedExportedModule(selectedExportedModule)}
+              onClick={() => saveAddProvidedServiceModal()}
             >
-              Export Module
+              Save
             </Button>
-            <Button onClick={onCloseExportModule}>Cancel</Button>
+            <Button onClick={onCloseProvideService}>Cancel</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

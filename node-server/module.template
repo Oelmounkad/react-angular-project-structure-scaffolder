@@ -1,0 +1,20 @@
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+
+$componentImports
+
+@NgModule({
+  declarations: [
+    $declaredComponents
+  ],
+  imports: [
+    $importedModules
+  ],
+  exports: [
+    $exportedModules
+  ],
+  providers: [
+      $providedServices
+  ],
+})
+export class $moduleName { }

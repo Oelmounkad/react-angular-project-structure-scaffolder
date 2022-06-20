@@ -2,7 +2,24 @@
 const fs = require('fs');
 
 
-const moduleFileTemplate = `import { NgModule } from '@angular/core';\nimport { BrowserModule } from '@angular/platform-browser';\n$componentImports\n@NgModule({\ndeclarations: [\n$declaredComponents\n],\n})\nexport class $moduleName { }`
+const moduleFileTemplate = `import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+$componentImports
+@NgModule({
+declarations: [
+$declaredComponents
+],
+imports: [
+$importedModules
+],
+exports: [
+$exportedModules
+],
+providers: [
+$providedServices
+],
+})
+export class $moduleName { }`
 
 
 const projectStructure = {
@@ -19,6 +36,36 @@ const projectStructure = {
                 id: 'deecbaed-c958-4530-8728-005a74543600',
                 name: 'SecondComponent'
             }
+          ],
+          importedModules: [
+            {
+              id: '618f3d6f-3653-4707-96a6-1bfd274f74ba',
+              name: 'FirstImportedModule',
+            },
+            {
+              id: '618f3d6f-3653-4707-96a6-1bfd274f74ba',
+              name: 'SecondImportedModule',
+            },
+          ],
+          exportedModules: [
+            {
+              id: '618f3d6f-3653-4707-96a6-1bfd274f74ba',
+              name: 'FirstExportedModule',
+            },
+            {
+              id: '618f3d6f-3653-4707-96a6-1bfd274f74ba',
+              name: 'SecondExportedModule',
+            },
+          ],
+          providedServices: [
+            {
+              id: '618f3d6f-3653-4707-96a6-1bfd274f74ba',
+              name: 'FirstService',
+            },
+            {
+              id: '618f3d6f-3653-4707-96a6-1bfd274f74ba',
+              name: 'SecondService',
+            },
           ]
         },
         {
@@ -33,6 +80,36 @@ const projectStructure = {
                   id: 'deecbaed-c958-4530-8728-005a74543600',
                   name: 'SecondoComponent'
               }
+            ],
+            importedModules: [
+              {
+                id: '618f3d6f-3653-4707-96a6-1bfd274f74ba',
+                name: 'FirstImportedModule',
+              },
+              {
+                id: '618f3d6f-3653-4707-96a6-1bfd274f74ba',
+                name: 'SecondImportedModule',
+              },
+            ],
+            exportedModules: [
+              {
+                id: '618f3d6f-3653-4707-96a6-1bfd274f74ba',
+                name: 'FirstExportedModule',
+              },
+              {
+                id: '618f3d6f-3653-4707-96a6-1bfd274f74ba',
+                name: 'SecondExportedModule',
+              },
+            ],
+            providedServices: [
+              {
+                id: '618f3d6f-3653-4707-96a6-1bfd274f74ba',
+                name: 'FirstService',
+              },
+              {
+                id: '618f3d6f-3653-4707-96a6-1bfd274f74ba',
+                name: 'SecondService',
+              },
             ]
           },
       ],
@@ -72,6 +149,17 @@ fs.mkdir('src', (err) => {
   }
 
   const getModuleFileContentFromTemplate = (module) => {
-    const declaredComponents = module.components.map((component) => component.name).join(',\n');
-    return moduleFileTemplate.replace('$moduleName',module.name).replace('$declaredComponents',declaredComponents)
+    const declaredComponents = module.components.map((component) => `\t${component.name}`).join(',\n');
+    const componentsImports = module.components.map((component) => `import { ${component.name} } from './${component.name.replace('Component','').toLowerCase()}.component.ts';\n`).join('');
+    const importedModules = module.importedModules.map((module) => `\t${module.name}`).join(',\n');
+    const exportedModules = module.exportedModules.map((module) => `\t${module.name}`).join(',\n');
+    const providedServices = module.providedServices.map((service) => `\t${service.name}`).join(',\n');
+    
+    return moduleFileTemplate
+    .replace('$moduleName',module.name)
+    .replace('$declaredComponents',declaredComponents)
+    .replace('$componentImports',componentsImports)
+    .replace('$importedModules',importedModules)
+    .replace('$exportedModules',exportedModules)
+    .replace('$providedServices',providedServices);
   }

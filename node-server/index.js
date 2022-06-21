@@ -31,7 +31,47 @@ export class $fullComponentName { }`;
 
 const componentHtmlFileTemplate = `<p>$componentName works!</p>`;
 
+const serviceTsFileTemplate = `import { Injectable } from '@angular/core';
+
+@Injectable({})
+export class $fullServiceName {
+
+  constructor() { }
+}
+`;
+
+const serviceSpecFileTemplate = `import { TestBed } from '@angular/core/testing';
+
+import { $fullServiceName } from './$serviceName.service';
+
+describe('$fullServiceName', () => {
+  let service: $fullServiceName;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+    service = TestBed.inject($fullServiceName);
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+});`;
+
 const projectStructure = {
+  globalServices: [
+    {
+      id: "e04de2dc-2c94-44cd-b087-73371abfa771",
+      name: "CeGlobalService",
+    },
+    {
+      id: "e04de2dc-2c94-44cd-b087-73371abfa771",
+      name: "CeceGlobalService",
+    },
+    {
+      id: "e04de2dc-2c94-44cd-b087-73371abfa771",
+      name: "CececeGlobalService",
+    },
+  ],
   modules: [
     {
       id: "618f3d6f-3653-4707-96a6-1bfd274f74ba",
@@ -129,21 +169,40 @@ fs.mkdir("src", (err) => {
     return console.error(err);
   }
 
-  projectStructure.modules.forEach((module) => {
+  projectStructure.modules?.forEach((module) => {
     const directoryName = module.name.replace("Module", "").toLowerCase();
     fs.mkdir("src/" + directoryName, (err) => {
       if (err) {
         return console.error(err);
       }
+
       createModuleFile("src/" + directoryName, module);
+
       module.components.forEach((component) => {
         createComponentFiles("src/" + directoryName, component);
       });
-      module.providedServices.forEach((service) => {
-        // generating provided services
-      })
 
+      module.providedServices.forEach((service) => {
+        createServiceFiles("src/" + directoryName, service);
+      });
     });
+  });
+
+  projectStructure.globalServices?.forEach((service) => {
+    const serviceName = service.name.replace("Service", "").toLowerCase();
+    const serviceTsFile = serviceName + ".service.ts";
+    const serviceSpecFile = serviceName + ".service.spec.ts";
+
+    fs.appendFile(
+      "src/" + serviceTsFile,
+      getServiceTsFileContentFromTemplate(service, true),
+      (err) => {}
+    );
+    fs.appendFile(
+      "src/" + serviceSpecFile,
+      getServiceSpecFileContentFromTemplate(service),
+      (err) => {}
+    );
   });
 });
 
@@ -178,6 +237,31 @@ const createComponentFiles = (baseDirectory, component) => {
       fs.appendFile(
         baseDirectory + "/components/" + componentDir + "/" + cssFileName,
         "",
+        (err) => {}
+      );
+    }
+  );
+};
+
+const createServiceFiles = (baseDirectory, service) => {
+  const serviceName = service.name.replace("Service", "").toLowerCase();
+  const tsFileName = serviceName + ".service.ts";
+  const tsSpecFileName = serviceName + ".service.spec.ts";
+  fs.mkdir(
+    baseDirectory + "/services/" + serviceName + "/",
+    { recursive: true },
+    (err) => {
+      if (err) {
+        return console.error(err);
+      }
+      fs.appendFile(
+        baseDirectory + "/services/" + serviceName + "/" + tsFileName,
+        getServiceTsFileContentFromTemplate(service, false),
+        (err) => {}
+      );
+      fs.appendFile(
+        baseDirectory + "/services/" + serviceName + "/" + tsSpecFileName,
+        getServiceSpecFileContentFromTemplate(service),
         (err) => {}
       );
     }
@@ -244,4 +328,31 @@ const getComponentHtmlFileContentFromTemplate = (component) => {
     "$componentName",
     component.name.replace("Component", "").toLowerCase()
   );
+};
+
+const getServiceTsFileContentFromTemplate = (service, global) => {
+  let serviceFileContent = serviceTsFileTemplate.replace(
+    "$fullServiceName",
+    service.name
+    );
+    console.log(serviceFileContent)
+    if (global) {
+      serviceFileContent = serviceFileContent.replace(
+        "@Injectable({})",
+        `@Injectable({\n\tprovidedIn: 'root'\n})`
+      );
+  
+    console.log(serviceFileContent)
+    }
+    
+    return serviceFileContent;
+  };
+
+const getServiceSpecFileContentFromTemplate = (service) => {
+  return serviceSpecFileTemplate
+    .replaceAll("$fullServiceName", service.name)
+    .replaceAll(
+      "$serviceName",
+      service.name.replace("Service", "").toLowerCase()
+    );
 };

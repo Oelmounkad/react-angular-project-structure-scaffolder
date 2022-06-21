@@ -7,55 +7,24 @@ const fs = require("fs");
 const archiver = require('archiver');
 const { moduleFileTemplate, componentTsFileTemplate, componentHtmlFileTemplate, serviceTsFileTemplate, serviceSpecFileTemplate } = require('./angular-file-templates');
 const { projectStructure } = require('./angular-project-structure.mock');
-const output = fs.createWriteStream('angular-project-structure.zip');
-
-const archive = archiver('zip');
+const archive = archiver('zip', {
+  zlib: { level: 9 } // Sets the compression level.
+});
 
 app.use(cors());
 
+app.get('/', async (req,res) => {
 
-app.get('/', (req,res) => {
-  const response = {
-    x : 'x'
-  }
-
+  const output = fs.createWriteStream('angular-project-structure.zip');
   
-  /* output.on('end', function() {
-    console.log('Data has been drained');
-  });
+  // Creating the project structure
 
-  archive.on('error', function(err) {
-    throw err;
-  });
-
-  output.on('close', function() {
-    console.log(archive.pointer() + ' total bytes');
-    console.log('archiver has been finalized and the output file descriptor has closed.');
-  });
-
-  archive.pipe(output);
-  archive.directory('src/', 'src');
-  archive.finalize(); */
-
-  res.download('myzip.zip');
-//res.json({response})
-});
-
-app.listen(4000);
-
-const generateAngularProjectStructure = (projectStructureJsonObject) => {
   fs.mkdir("src", (err) => {
-    if (err) {
-      return console.error(err);
-    }
-  
+
     projectStructure.modules?.forEach((module) => {
       const directoryName = module.name.replace("Module", "").toLowerCase();
       fs.mkdir("src/" + directoryName, (err) => {
-        if (err) {
-          return console.error(err);
-        }
-  
+
         createModuleFile("src/" + directoryName, module);
   
         module.components.forEach((component) => {
@@ -83,9 +52,30 @@ const generateAngularProjectStructure = (projectStructureJsonObject) => {
         getServiceSpecFileContentFromTemplate(service),
         (err) => {}
       );
+
     });
+    // Archiving the data
+      output.on('end', function() {
+        console.log('Data has been drained');
+      });
+    
+      archive.on('error', function(err) {
+        throw err;
+      });
+    
+      output.on('close', function() {
+        res.download('angular-project-structure.zip');
+      });
+    
+      archive.pipe(output);
+      archive.directory('src/', 'src');
+      archive.finalize();
   });
-}
+});
+
+app.listen(4000);
+ 
+
 
 
 

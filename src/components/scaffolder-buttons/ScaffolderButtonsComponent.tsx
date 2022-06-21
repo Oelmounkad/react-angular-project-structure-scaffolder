@@ -10,11 +10,11 @@ const ScaffolderButtonsComponent = () => {
 
   const getStructure = () => {
     axios({
-      url: '',
+      url: 'http://localhost:4000/',
       method: 'GET',
       responseType: 'arraybuffer',
       headers: {
-        'Content-Type': 'application/gzip'
+        'Content-Type': 'application/zip'
     }
     }).then((res) => {
       console.log(res);

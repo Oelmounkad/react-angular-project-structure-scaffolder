@@ -1,210 +1,93 @@
+
+const express = require('express');
+const cors = require('cors');
+
+const app = express();
 const fs = require("fs");
+const archiver = require('archiver');
+const { moduleFileTemplate, componentTsFileTemplate, componentHtmlFileTemplate, serviceTsFileTemplate, serviceSpecFileTemplate } = require('./angular-file-templates');
+const { projectStructure } = require('./angular-project-structure.mock');
+const output = fs.createWriteStream('angular-project-structure.zip');
 
-const moduleFileTemplate = `import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-$componentImports
-@NgModule({
-declarations: [
-$declaredComponents
-],
-imports: [
-$importedModules
-],
-exports: [
-$exportedModules
-],
-providers: [
-$providedServices
-],
-})
-export class $moduleName { }`;
+const archive = archiver('zip');
 
-const componentTsFileTemplate = `import { Component } from '@angular/core';
+app.use(cors());
 
-@Component({
-  selector: '$componentName',
-  templateUrl: './$componentName.component.html',
-  styleUrls: ['./$componentName.component.css']
-})
 
-export class $fullComponentName { }`;
-
-const componentHtmlFileTemplate = `<p>$componentName works!</p>`;
-
-const serviceTsFileTemplate = `import { Injectable } from '@angular/core';
-
-@Injectable({})
-export class $fullServiceName {
-
-  constructor() { }
-}
-`;
-
-const serviceSpecFileTemplate = `import { TestBed } from '@angular/core/testing';
-
-import { $fullServiceName } from './$serviceName.service';
-
-describe('$fullServiceName', () => {
-  let service: $fullServiceName;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject($fullServiceName);
-  });
-
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-});`;
-
-const projectStructure = {
-  globalServices: [
-    {
-      id: "e04de2dc-2c94-44cd-b087-73371abfa771",
-      name: "CeGlobalService",
-    },
-    {
-      id: "e04de2dc-2c94-44cd-b087-73371abfa771",
-      name: "CeceGlobalService",
-    },
-    {
-      id: "e04de2dc-2c94-44cd-b087-73371abfa771",
-      name: "CececeGlobalService",
-    },
-  ],
-  modules: [
-    {
-      id: "618f3d6f-3653-4707-96a6-1bfd274f74ba",
-      name: "FirstModule",
-      components: [
-        {
-          id: "deecbaed-c958-4530-8728-005a74543600",
-          name: "FfirstComponent",
-        },
-        {
-          id: "deecbaed-c958-4530-8728-005a74543600",
-          name: "SsecondComponent",
-        },
-      ],
-      importedModules: [
-        {
-          id: "618f3d6f-3653-4707-96a6-1bfd274f74ba",
-          name: "FirstImportedModule",
-        },
-        {
-          id: "618f3d6f-3653-4707-96a6-1bfd274f74ba",
-          name: "SecondImportedModule",
-        },
-      ],
-      exportedModules: [
-        {
-          id: "618f3d6f-3653-4707-96a6-1bfd274f74ba",
-          name: "FirstExportedModule",
-        },
-        {
-          id: "618f3d6f-3653-4707-96a6-1bfd274f74ba",
-          name: "SecondExportedModule",
-        },
-      ],
-      providedServices: [
-        {
-          id: "618f3d6f-3653-4707-96a6-1bfd274f74ba",
-          name: "FirstService",
-        },
-        {
-          id: "618f3d6f-3653-4707-96a6-1bfd274f74ba",
-          name: "SecondService",
-        },
-      ],
-    },
-    {
-      id: "618f3d6f-3653-4707-96a6-1bfd274f74ba",
-      name: "SecondModule",
-      components: [
-        {
-          id: "deecbaed-c958-4530-8728-005a74543600",
-          name: "FffirstoComponent",
-        },
-        {
-          id: "deecbaed-c958-4530-8728-005a74543600",
-          name: "SssecondoComponent",
-        },
-      ],
-      importedModules: [
-        {
-          id: "618f3d6f-3653-4707-96a6-1bfd274f74ba",
-          name: "FirstImportedModule",
-        },
-        {
-          id: "618f3d6f-3653-4707-96a6-1bfd274f74ba",
-          name: "SecondImportedModule",
-        },
-      ],
-      exportedModules: [
-        {
-          id: "618f3d6f-3653-4707-96a6-1bfd274f74ba",
-          name: "FirstExportedModule",
-        },
-        {
-          id: "618f3d6f-3653-4707-96a6-1bfd274f74ba",
-          name: "SecondExportedModule",
-        },
-      ],
-      providedServices: [
-        {
-          id: "618f3d6f-3653-4707-96a6-1bfd274f74ba",
-          name: "FirstService",
-        },
-        {
-          id: "618f3d6f-3653-4707-96a6-1bfd274f74ba",
-          name: "SecondService",
-        },
-      ],
-    },
-  ],
-};
-
-fs.mkdir("src", (err) => {
-  if (err) {
-    return console.error(err);
+app.get('/', (req,res) => {
+  const response = {
+    x : 'x'
   }
 
-  projectStructure.modules?.forEach((module) => {
-    const directoryName = module.name.replace("Module", "").toLowerCase();
-    fs.mkdir("src/" + directoryName, (err) => {
-      if (err) {
-        return console.error(err);
-      }
+  
+  /* output.on('end', function() {
+    console.log('Data has been drained');
+  });
 
-      createModuleFile("src/" + directoryName, module);
+  archive.on('error', function(err) {
+    throw err;
+  });
 
-      module.components.forEach((component) => {
-        createComponentFiles("src/" + directoryName, component);
-      });
+  output.on('close', function() {
+    console.log(archive.pointer() + ' total bytes');
+    console.log('archiver has been finalized and the output file descriptor has closed.');
+  });
 
-      module.providedServices.forEach((service) => {
-        createServiceFiles("src/" + directoryName, service);
+  archive.pipe(output);
+  archive.directory('src/', 'src');
+  archive.finalize(); */
+
+  res.download('myzip.zip');
+//res.json({response})
+});
+
+app.listen(4000);
+
+const generateAngularProjectStructure = (projectStructureJsonObject) => {
+  fs.mkdir("src", (err) => {
+    if (err) {
+      return console.error(err);
+    }
+  
+    projectStructure.modules?.forEach((module) => {
+      const directoryName = module.name.replace("Module", "").toLowerCase();
+      fs.mkdir("src/" + directoryName, (err) => {
+        if (err) {
+          return console.error(err);
+        }
+  
+        createModuleFile("src/" + directoryName, module);
+  
+        module.components.forEach((component) => {
+          createComponentFiles("src/" + directoryName, component);
+        });
+  
+        module.providedServices.forEach((service) => {
+          createServiceFiles("src/" + directoryName, service);
+        });
       });
     });
+  
+    projectStructure.globalServices?.forEach((service) => {
+      const serviceName = service.name.replace("Service", "").toLowerCase();
+      const serviceTsFile = serviceName + ".service.ts";
+      const serviceSpecFile = serviceName + ".service.spec.ts";
+  
+      fs.appendFile(
+        "src/" + serviceTsFile,
+        getServiceTsFileContentFromTemplate(service, true),
+        (err) => {}
+      );
+      fs.appendFile(
+        "src/" + serviceSpecFile,
+        getServiceSpecFileContentFromTemplate(service),
+        (err) => {}
+      );
+    });
   });
+}
 
-  projectStructure.globalServices?.forEach((service) => {
-    const serviceName = service.name.replace("Service", "").toLowerCase();
-    const serviceTsFile = serviceName + ".service.ts";
-    const serviceSpecFile = serviceName + ".service.spec.ts";
 
-    fs.appendFile(
-      "src/" + serviceTsFile,
-      getServiceTsFileContentFromTemplate(service, true),
-      (err) => {}
-    );
-    fs.appendFile(
-      "src/" + serviceSpecFile,
-      getServiceSpecFileContentFromTemplate(service),
-      (err) => {}
-    );
-  });
-});
 
 const createComponentFiles = (baseDirectory, component) => {
   const componentDir = component.name.replace("Component", "").toLowerCase();
@@ -335,14 +218,12 @@ const getServiceTsFileContentFromTemplate = (service, global) => {
     "$fullServiceName",
     service.name
     );
-    console.log(serviceFileContent)
     if (global) {
       serviceFileContent = serviceFileContent.replace(
         "@Injectable({})",
         `@Injectable({\n\tprovidedIn: 'root'\n})`
       );
   
-    console.log(serviceFileContent)
     }
     
     return serviceFileContent;

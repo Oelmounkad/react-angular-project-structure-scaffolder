@@ -1,5 +1,6 @@
 import create from "zustand";
 import { devtools } from "zustand/middleware";
+import { v4 as uuid} from 'uuid'
 interface AppState {
   chosenScaffolder: string;
   modules: IModule[];
@@ -116,10 +117,11 @@ export const useStore = create<AppState | any>(
       moduleToImport: IModule,
       hostingModule: IModule
     ) => {
+      const { id , name } = moduleToImport;
       set((state: AppState) => {
         state.modules
           .find((module) => module.id === hostingModule.id)
-          ?.importedModules?.push(moduleToImport);
+          ?.importedModules?.push({id, name, nestedId: uuid()});
         return state;
       });
     },
@@ -127,10 +129,11 @@ export const useStore = create<AppState | any>(
       moduleToExport: IModule,
       hostingModule: IModule
     ) => {
+      const { id , name } = moduleToExport;
       set((state: AppState) => {
         state.modules
           .find((module) => module.id === hostingModule.id)
-          ?.exportedModules?.push(moduleToExport);
+          ?.exportedModules?.push({id, name, nestedId: uuid()});
         return state;
       });
     },

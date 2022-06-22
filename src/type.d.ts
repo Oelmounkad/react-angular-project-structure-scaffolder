@@ -1,5 +1,6 @@
 interface IModule {
     id: string;
+    nestedId?: string;
     name: string;
     components?: IComponent[];
     importedModules?: IModule[];

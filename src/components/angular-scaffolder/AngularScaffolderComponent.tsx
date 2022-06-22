@@ -20,7 +20,9 @@ import { useStore } from "../../stores/appStore";
 import AngularModuleComponent from "../angular module/AngularModuleComponent";
 import { v4 as uuidv4 } from "uuid";
 import "./AngularScaffolderComponent.css";
-import { FaAngular } from "react-icons/fa";
+import { FaAngular, FaDownload } from "react-icons/fa";
+import axios from 'axios';
+import fileDownload from "js-file-download";
 
 const AngularScaffolderComponent = () => {
   const { isOpen : isOpenAddModule, onOpen: onOpenAddModule, onClose: onCloseAddModule } = useDisclosure();
@@ -52,14 +54,36 @@ const AngularScaffolderComponent = () => {
     onCloseAddGlobalService();
   };
 
+  const generateAngularProject = () => {
+    const payload = {
+      modules,
+      globalServices
+  };
+
+  axios({
+    url: 'http://localhost:4000/angular-project-scaffolder',
+    method: 'POST',
+    responseType: 'arraybuffer',
+  data: {
+    projectStructure: JSON.stringify(payload)
+  }
+  }).then((res) => {
+    fileDownload(res.data, 'angular-project-structure.zip');
+  })
+  };
+
   return (
     <div className="angular-scaffolder-wrapper">
-      <Stack direction='row' spacing={4} align='center'>
+      <div className="tools"> <i> <u>Tools:</u> </i> </div>
+      <Stack direction='row' spacing={4} align='center' justifyContent='center'>
           <Button onClick={onOpenAddModule} leftIcon={<AddIcon />} colorScheme='red'>
             Add Module
           </Button>
           <Button onClick={onOpenAddGlobalService} leftIcon={<AddIcon />} colorScheme='yellow'>
             Add Global Service
+          </Button>
+          <Button onClick={() => generateAngularProject()} leftIcon={<FaDownload />} colorScheme='green'>
+            Generate Angular Project
           </Button>
       </Stack>
       <br />

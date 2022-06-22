@@ -39,3 +39,10 @@
     padding: 10px;
     font-size: 20px;
 }
+
+.tools{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 6px;
+    align-items: center;
+}

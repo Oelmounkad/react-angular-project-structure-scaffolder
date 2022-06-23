@@ -61,7 +61,7 @@ const AngularScaffolderComponent = () => {
   };
 
   axios({
-    url: 'http://localhost:4000/angular-project-scaffolder',
+    url: 'https://react-angular-project-structure-scaffolder.vercel.app/angular-project-scaffolder',
     method: 'POST',
     responseType: 'arraybuffer',
   data: {

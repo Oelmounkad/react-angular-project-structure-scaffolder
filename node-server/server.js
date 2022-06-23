@@ -15,18 +15,15 @@ const {
   getServiceSpecFileContentFromTemplate,
 } = require("./angular-template-filler-functions");
 
+app.use(cors({
+  origin: '*'
+}));
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 
-app.use(cors());
 
-const corsOptions = {
-  origin: '*',
-  optionsSuccessStatus: 200 
-}
-
-app.options('*', cors(corsOptions));
 
 let port = process.env.PORT || 4000;
 
@@ -34,7 +31,7 @@ app.get('/', (req,res) => {
   res.send('Hello world');
 })
 
-app.post("/angular-project-scaffolder", cors(), (req, res) => {
+app.post("/angular-project-scaffolder", (req, res) => {
   const projectStructure = JSON.parse(req.body.projectStructure);
   const randomId = v4();
   const src = `src-${randomId}`;

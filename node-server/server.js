@@ -19,11 +19,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 
-app.use(cors({origin: '*'}));
-app.options('/angular-project-scaffolder', cors())
+app.use(cors());
+
+const corsOptions = {
+  origin: '*',
+  optionsSuccessStatus: 200 
+}
+
+app.options('*', cors(corsOptions));
 
 let port = process.env.PORT || 4000;
-
 
 app.get('/', (req,res) => {
   res.send('Hello world');

@@ -60,9 +60,8 @@ const AngularScaffolderComponent = () => {
       globalServices
   };
 
-  const baseUrl = process.env.BACK_END_URL || 'http://localhost:4000';
   axios({
-    url : baseUrl + '/angular-project-scaffolder',
+    url : 'https://angular-scaffolder-node.herokuapp.com/angular-project-scaffolder',
     method: 'POST',
     responseType: 'arraybuffer',
   data: {

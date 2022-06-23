@@ -102,6 +102,10 @@ const AngularScaffolderComponent = () => {
   })
   };
 
+  const isGenerateButtonEnabled = () : boolean => {
+    return modules.length > 0 || globalServices.length > 0;
+  }
+
   return (
     <div className="angular-scaffolder-wrapper">
       <div className="tools"> <i> <u>Tools:</u> </i> </div>
@@ -112,7 +116,7 @@ const AngularScaffolderComponent = () => {
           <Button onClick={onOpenAddGlobalService} leftIcon={<AddIcon />} colorScheme='yellow'>
             Add Global Service
           </Button>
-          <Button onClick={() => generateAngularProject()} leftIcon={<FaDownload />} colorScheme='green'>
+          <Button onClick={() => generateAngularProject()} leftIcon={<FaDownload />} colorScheme='green' disabled={!isGenerateButtonEnabled()}>
             Generate Angular Project
           </Button>
          {loading && <Spinner

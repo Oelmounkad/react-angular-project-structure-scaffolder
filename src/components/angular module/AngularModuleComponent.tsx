@@ -99,6 +99,16 @@ const AngularModuleComponent = (props: any) => {
 
 
   const saveAddComponentModal = () => {
+    const reg = /^[a-z]+$/i;
+    if (!reg.test(componentName)) {
+      toast({
+        title: `name should only includes letters`,
+        status: "error",
+        position: "top",
+        isClosable: true,
+      });
+      return;
+    }
     addComponentToModule(props.module.id, {
       id: uuidv4(),
       name: `${componentName.charAt(0).toUpperCase()}${componentName.slice(
@@ -183,6 +193,16 @@ const AngularModuleComponent = (props: any) => {
   };
 
 const saveAddProvidedServiceModal = () => {
+  const reg = /^[a-z]+$/i;
+    if (!reg.test(providedServiceName)) {
+      toast({
+        title: `name should only includes letters`,
+        status: "error",
+        position: "top",
+        isClosable: true,
+      });
+      return;
+    }
   addProvidedServiceToModule(props.module.id, {
     id: uuidv4(),
     name: `${providedServiceName.charAt(0).toUpperCase()}${providedServiceName.slice(

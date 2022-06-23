@@ -12,8 +12,10 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Spinner,
   Stack,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useStore } from "../../stores/appStore";
@@ -31,10 +33,24 @@ const AngularScaffolderComponent = () => {
   const [moduleName, setModuleName] = useState("");
 
   const [globalServiceName, setGlobalServiceName] = useState("");
+
+  const [loading, setLoading] = useState(false);
   
   const { addModule, addGlobalService, modules, globalServices, removeGlobalService } = useStore();
 
+  const toast = useToast();
+
   const saveAddModuleModal = () => {
+    const reg = /^[a-z]+$/i;
+    if (!reg.test(moduleName)) {
+      toast({
+        title: `name should only includes letters`,
+        status: "error",
+        position: "top",
+        isClosable: true,
+      });
+      return;
+    }
     const newModule : IModule = {
       id: uuidv4(),
       name: `${moduleName.charAt(0).toUpperCase()}${moduleName.slice(1)}Module`
@@ -45,6 +61,16 @@ const AngularScaffolderComponent = () => {
   };
 
   const saveAddGlobalServiceModal = () => {
+    const reg = /^[a-z]+$/i;
+    if (!reg.test(globalServiceName)) {
+      toast({
+        title: `name should only includes letters`,
+        status: "error",
+        position: "top",
+        isClosable: true,
+      });
+      return;
+    }
     const newGlobalService : IService = {
       id: uuidv4(),
       name: `${globalServiceName.charAt(0).toUpperCase()}${globalServiceName.slice(1)}Service`
@@ -55,6 +81,7 @@ const AngularScaffolderComponent = () => {
   };
 
   const generateAngularProject = () => {
+    setLoading(true);
     const payload = {
       modules,
       globalServices
@@ -68,7 +95,10 @@ const AngularScaffolderComponent = () => {
     projectStructure: JSON.stringify(payload)
   }
   }).then((res) => {
+    setLoading(false);
     fileDownload(res.data, 'angular-project-structure.zip');
+  }).finally(() => {
+    setLoading(false);
   })
   };
 
@@ -85,6 +115,13 @@ const AngularScaffolderComponent = () => {
           <Button onClick={() => generateAngularProject()} leftIcon={<FaDownload />} colorScheme='green'>
             Generate Angular Project
           </Button>
+         {loading && <Spinner
+            thickness='4px'
+            speed='0.65s'
+            emptyColor='gray.200'
+            color='green.500'
+            size='lg'
+          />  } 
       </Stack>
       <br />
 <div className="modules-services-header">

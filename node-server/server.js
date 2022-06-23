@@ -18,20 +18,8 @@ const {
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-const corsOpts = {
-  origin: '*',
 
-  methods: [
-    'GET',
-    'POST',
-  ],
-
-  allowedHeaders: [
-    'Content-Type',
-  ],
-};
-app.use(cors(corsOpts));
-app.options('*', cors())
+app.use(cors({origin: '*'}));
 
 let port = process.env.PORT || 4000;
 

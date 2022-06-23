@@ -20,6 +20,7 @@ app.use(bodyParser.json());
 
 
 app.use(cors({origin: '*'}));
+app.options('/angular-project-scaffolder', cors())
 
 let port = process.env.PORT || 4000;
 
@@ -28,7 +29,7 @@ app.get('/', (req,res) => {
   res.send('Hello world');
 })
 
-app.post("/angular-project-scaffolder", (req, res) => {
+app.post("/angular-project-scaffolder", cors(), (req, res) => {
   const projectStructure = JSON.parse(req.body.projectStructure);
   const randomId = v4();
   const src = `src-${randomId}`;

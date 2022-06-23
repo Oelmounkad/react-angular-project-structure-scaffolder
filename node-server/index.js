@@ -17,7 +17,22 @@ const {
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(cors());
+
+const corsOpts = {
+  origin: '*',
+
+  methods: [
+    'GET',
+    'POST',
+  ],
+
+  allowedHeaders: [
+    'Content-Type',
+  ],
+};
+app.use(cors(corsOpts));
+
+let port = process.env.PORT || 4000;
 
 app.post("/angular-project-scaffolder", (req, res) => {
   const projectStructure = JSON.parse(req.body.projectStructure);
@@ -76,4 +91,4 @@ app.post("/angular-project-scaffolder", (req, res) => {
   });
 });
 
-app.listen(4000);
+app.listen(port);

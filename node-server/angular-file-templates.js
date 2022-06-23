@@ -1,4 +1,3 @@
-
 const moduleFileTemplate = `import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 $componentImports

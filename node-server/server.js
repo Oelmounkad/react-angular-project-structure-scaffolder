@@ -22,10 +22,17 @@ app.use(cors({
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use(function (req, res, next) {
+
+let port = process.env.PORT || 4000;
+
+app.get('/', (req,res) => {
+  res.send('Hello world');
+})
+
+app.post("/angular-project-scaffolder", (req, res, next) => {
 
   // Website you wish to allow to connect
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
 
   // Request methods you wish to allow
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -39,17 +46,7 @@ app.use(function (req, res, next) {
 
   // Pass to next layer of middleware
   next();
-});
-
-
-
-let port = process.env.PORT || 4000;
-
-app.get('/', (req,res) => {
-  res.send('Hello world');
-})
-
-app.post("/angular-project-scaffolder", (req, res) => {
+} , (req, res) => {
   const projectStructure = JSON.parse(req.body.projectStructure);
   const randomId = v4();
   const src = `src-${randomId}`;
